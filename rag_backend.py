@@ -9,6 +9,15 @@ import boto3
 from typing import Any
 
 
+def get_bedrock_runtime() -> Any:
+    bedrock_runtime = boto3.client(
+        service_name="bedrock-runtime",
+        region_name="us-east-1"
+    )
+
+    return bedrock_runtime
+
+
 def get_index() -> Any:
     data_load = PyPDFLoader("https://arxiv.org/pdf/1706.03762.pdf")
 
@@ -18,8 +27,10 @@ def get_index() -> Any:
         chunk_overlap=10
     )
 
+    bedrock_runtime = get_bedrock_runtime()
+
     data_embeddings = BedrockEmbeddings(
-        credentials_profile_name="default",
+        client=bedrock_runtime,
         model_id="amazon.titan-embed-text-v1"
     )
 
@@ -35,10 +46,7 @@ def get_index() -> Any:
 
 
 def get_llm() -> Bedrock:
-    bedrock_runtime = boto3.client(
-        service_name="bedrock-runtime",
-        region_name="us-east-1"
-    )
+    bedrock_runtime = get_bedrock_runtime()
 
     llm = Bedrock(
         client=bedrock_runtime,
