@@ -11,7 +11,7 @@ if "vector_index" not in st.session_state:
 if "llm" not in st.session_state:
     st.session_state.llm = backend.get_llm()
 
-input_text = st.text_input("Questione...")
+input_text = st.text_input("Frage...")
 if input_text:
     response = backend.rag_response(
         index=st.session_state.vector_index,
